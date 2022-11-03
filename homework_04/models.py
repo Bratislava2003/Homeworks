@@ -6,7 +6,7 @@ from sqlalchemy.orm import declared_attr, declarative_base, sessionmaker, relati
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, AsyncEngine
 from loguru import logger
 
-PG_CONN_URI = os.environ.get("SQLALCHEMY_PG_CONN_URI") or "postgresql+asyncpg://postgres:passwd!@localhost/postgres"
+PG_CONN_URI = os.environ.get("SQLALCHEMY_PG_CONN_URI") or "postgresql+asyncpg://username:passwd!@localhost/postgres"
 
 async_engine: AsyncEngine = create_async_engine(
     PG_CONN_URI,

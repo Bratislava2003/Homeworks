@@ -13,7 +13,6 @@
 - закрытие соединения с БД
 """
 import asyncio
-from loguru import logger
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from jsonplaceholder_requests import get_posts, get_users
@@ -32,14 +31,12 @@ async def get_data():
 async def create_user(session: AsyncSession, user_name: str, username: str, email: str):
     user = User(name=user_name, username=username, email=email)
     session.add(user)
-    logger.info("Created user {}", user_name)
     return user
 
 
 async def create_post(session: AsyncSession, body: str, title: str, user_id: int):
     post = Post(title=title, body=body, user_id=user_id)
     session.add(post)
-    logger.success('Created post {}', title)
     return post
 
 
@@ -57,14 +54,12 @@ async def async_main():
     async with async_session() as db_session:
         async with db_session.begin():
             for i in range(len(all_data[0])):
-                logger.info('Iteration {}', i)
                 namev = names[i]
                 usernamev = usernames[i]
                 emailv = emails[i]
                 await create_user(db_session, namev, usernamev, emailv)
 
             for d in range(len(all_data[3])):
-                logger.info("Posts iteration {}", d)
                 bodyv = str(bodies[d])
                 titlev = str(titles[d])
                 user_idsv = int(user_ids[d])

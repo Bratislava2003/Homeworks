@@ -1,6 +1,6 @@
-import asyncio, aiohttp
+import asyncio
+import aiohttp
 from dataclasses import dataclass
-from loguru import logger
 
 
 @dataclass(frozen=True)
@@ -56,26 +56,20 @@ async def fetch_data_posts(service):
 
 
 async def get_users():
-    logger.info("getting users...")
     res = await fetch_data_users(users_service)
     return res
 
 
 async def get_posts():
-    logger.info("Getting posts...")
     res = await fetch_data_posts(posts_service)
     return res
 
 
 def main():
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-    logger.info("Started main")
     users = asyncio.run(get_users())
     posts = asyncio.run(get_posts())
-    logger.info("List of users: {}", users)
-    logger.info("Posts list: {}", posts)
 
 
 if __name__ == '__main__':
-    logger.info("Users service info: {}", list(users_service.__dict__.values())[1:])
     main()

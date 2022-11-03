@@ -5,8 +5,8 @@ services:
     image: postgres
     environment:
       POSTGRES_DB: blog
-      POSTGRES_USER: username
-      POSTGRES_PASSWORD: passwd!
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
       - "5432:5432"

@@ -41,7 +41,7 @@ class Post(Base):
     user = relationship("User", back_populates="posts", uselist=False)
 
 
-async_session = sessionmaker(
+Session = sessionmaker(
     async_engine,
     class_=AsyncSession,
     expire_on_commit=True

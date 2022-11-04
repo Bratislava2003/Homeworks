@@ -16,7 +16,7 @@ import asyncio
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from jsonplaceholder_requests import get_posts, get_users
-from models import User, async_session, Post, create_tables
+from models import User, Session, Post, create_tables
 
 
 async def get_data():
@@ -53,7 +53,7 @@ async def async_main():
     titles = all_data[4]
     user_ids = all_data[3]
 
-    async with async_session() as db_session:
+    async with Session() as db_session:
         async with db_session.begin():
             for i in range(len(all_data[0])):
                 namev = names[i]

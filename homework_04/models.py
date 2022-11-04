@@ -4,9 +4,8 @@ import os
 from sqlalchemy import Column, INTEGER, String, ForeignKey
 from sqlalchemy.orm import declared_attr, declarative_base, sessionmaker, relationship
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, AsyncEngine
-from loguru import logger
 
-PG_CONN_URI = os.environ.get("SQLALCHEMY_PG_CONN_URI") or "postgresql+asyncpg://postgres:password@localhost/postgres"
+PG_CONN_URI = os.environ.get("SQLALCHEMY_PG_CONN_URI") or "postgresql+asyncpg://postgres:password@localhost:5432/postgres"
 
 async_engine: AsyncEngine = create_async_engine(
     PG_CONN_URI,
@@ -50,11 +49,9 @@ async_session = sessionmaker(
 
 
 async def create_tables():
-    logger.info("Starting func...")
     async with async_engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
-        logger.success("Created tables")
 
 
 async def main():

@@ -67,8 +67,6 @@ async def get_posts():
 
 def main():
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-    users = asyncio.run(get_users())
-    posts = asyncio.run(get_posts())
 
 
 if __name__ == '__main__':

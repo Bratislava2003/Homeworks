@@ -1,17 +1,16 @@
 import asyncio
 from sqlalchemy.ext.asyncio import AsyncSession
-
-from jsonplaceholder_requests import get_posts, get_users
+import os
+from jsonplaceholder_requests import fetch_data, users_service, posts_service
 from models import User, Session, Post, create_tables
 
 
 async def get_data():
-    reformed_list = []
-    all_data = await asyncio.gather(get_users(), get_posts())
-    for data_half in all_data:
-        for data_block in data_half:
-            reformed_list.append(data_block)
-    return reformed_list
+    all_data = await asyncio.gather(fetch_data(users_service), fetch_data(posts_service))
+    for i in all_data:
+        for a in i:
+            print(a)
+    return all_data
 
 
 async def create_user(session: AsyncSession, user_name: str, username: str, email: str):
@@ -31,31 +30,27 @@ async def async_main():
 
     all_data = await get_data()
 
-    names = all_data[0]
-    usernames = all_data[1]
-    emails = all_data[2]
-
-    bodies = all_data[5]
-    titles = all_data[4]
-    user_ids = all_data[3]
+    users = all_data[0]
+    posts = all_data[1]
 
     async with Session() as db_session:
         async with db_session.begin():
-            for i in range(len(all_data[0])):
-                namev = names[i]
-                usernamev = usernames[i]
-                emailv = emails[i]
-                await create_user(db_session, namev, usernamev, emailv)
+            for user in users:
+                name = user.get(users_service.name_field)
+                username = user.get(users_service.username_field)
+                email = user.get(users_service.email_field)
+                await create_user(session=db_session, user_name=name, username=username, email=email)
 
-            for d in range(len(all_data[3])):
-                bodyv = str(bodies[d])
-                titlev = str(titles[d])
-                user_idsv = int(user_ids[d])
-                await create_post(db_session, bodyv, titlev, user_idsv)
+            for post in posts:
+                uid = post.get(posts_service.user_id_field)
+                title = post.get(posts_service.title_field)
+                body = post.get(posts_service.body_field)
+                await create_post(session=db_session, user_id=uid, title=title, body=body)
 
 
 def main():
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    if os.name == "nt":
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     asyncio.run(async_main())
 
 
